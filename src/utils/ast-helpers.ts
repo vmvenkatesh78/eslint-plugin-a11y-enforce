@@ -191,13 +191,15 @@ export function hasMatchingAncestor(
 ): boolean {
   // ESLint's AST nodes have a `parent` property set during traversal.
   // We walk up until we hit the program root (parent is undefined/null).
-  let current = node.parent as Record<string, unknown> | null;
+  // Cast through `unknown` because JSXElement's readonly properties don't
+  // overlap with Record's index signature under exactOptionalPropertyTypes.
+  let current = node.parent as unknown as Record<string, unknown> | null;
 
   while (current) {
     if (current.type === 'JSXElement' && current.openingElement) {
-      if (predicate(current.openingElement as JSXOpeningElement)) return true;
+      if (predicate(current.openingElement as unknown as JSXOpeningElement)) return true;
     }
-    current = (current.parent as Record<string, unknown> | null) ?? null;
+    current = (current.parent as unknown as Record<string, unknown> | null) ?? null;
   }
 
   return false;
