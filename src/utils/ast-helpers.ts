@@ -10,13 +10,13 @@
  * static analysis cannot resolve runtime values.
  */
 
-import type { JSXOpeningElement, JSXAttribute } from '../types';
+import type { JSXOpeningElement, JSXAttribute, ASTParentNode } from '../types';
 
 // ── Element classification ───────────────────────────────────────────
 // Module-level constants prevent per-visit allocation.
 
 const INTERACTIVE_ELEMENTS: ReadonlySet<string> = new Set([
-  'a', 'button', 'input', 'select', 'textarea',
+  'button', 'input', 'select', 'textarea',
 ]);
 
 const HEADING_ELEMENTS: ReadonlySet<string> = new Set([
@@ -152,9 +152,27 @@ export function getElementType(node: JSXOpeningElement): string {
 
 // ── Element classification ───────────────────────────────────────────
 
-/** Native HTML elements with built-in keyboard behavior. */
-export function isInteractiveElement(tagName: string): boolean {
-  return INTERACTIVE_ELEMENTS.has(tagName.toLowerCase());
+/**
+ * Native HTML elements with built-in keyboard behavior.
+ *
+ * <a> is only interactive when it has an href attribute. Without href,
+ * it's a placeholder anchor with no keyboard behavior and no implicit
+ * role. This matters for tooltip-no-interactive (an <a> without href
+ * inside a tooltip is not a violation) and focusable-has-interaction
+ * (an <a> without href and tabIndex={0} SHOULD fire).
+ */
+export function isInteractiveElement(
+  tagName: string,
+  node?: JSXOpeningElement,
+): boolean {
+  const lower = tagName.toLowerCase();
+  if (INTERACTIVE_ELEMENTS.has(lower)) return true;
+  if (lower === 'a') {
+    // If no node provided, assume interactive (conservative)
+    if (!node) return true;
+    return hasAttribute(node, 'href');
+  }
+  return false;
 }
 
 /**
@@ -191,15 +209,15 @@ export function hasMatchingAncestor(
 ): boolean {
   // ESLint's AST nodes have a `parent` property set during traversal.
   // We walk up until we hit the program root (parent is undefined/null).
-  // Cast through `unknown` because JSXElement's readonly properties don't
-  // overlap with Record's index signature under exactOptionalPropertyTypes.
-  let current = node.parent as unknown as Record<string, unknown> | null;
+  // ASTParentNode types the minimal shape we need from the parent chain.
+  let current: ASTParentNode | null | undefined =
+    node.parent as unknown as ASTParentNode | null;
 
   while (current) {
     if (current.type === 'JSXElement' && current.openingElement) {
-      if (predicate(current.openingElement as unknown as JSXOpeningElement)) return true;
+      if (predicate(current.openingElement)) return true;
     }
-    current = (current.parent as unknown as Record<string, unknown> | null) ?? null;
+    current = current.parent ?? null;
   }
 
   return false;

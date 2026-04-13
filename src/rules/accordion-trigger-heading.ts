@@ -1,8 +1,9 @@
 /**
  * Rule: accordion-trigger-heading
  *
- * A <button> with aria-expanded (the accordion trigger pattern)
- * should be wrapped in a heading element (h1-h6 or role="heading").
+ * A <button> or element with role="button" that has aria-expanded
+ * (the accordion trigger pattern) should be wrapped in a heading
+ * element (h1-h6 or role="heading").
  *
  * Screen reader users commonly navigate pages by headings (the H key
  * in NVDA/JAWS). Without a heading wrapper, accordion sections are
@@ -16,6 +17,7 @@ import type { Rule } from 'eslint';
 import type { JSXOpeningElement } from '../types';
 import {
   getElementType,
+  getAttributeValue,
   hasAttribute,
   hasMatchingAncestor,
   isHeadingElement,
@@ -26,7 +28,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that accordion trigger buttons are inside heading elements.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/accordion-trigger-heading.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#accordion-trigger-heading',
     },
     messages: {
       missingHeading:
@@ -44,10 +46,15 @@ const rule: Rule.RuleModule = {
         const node = astNode as unknown as JSXOpeningElement;
         const tagName = getElementType(node);
 
-        // Only applies to <button> elements with aria-expanded.
+        // Applies to <button> elements and elements with role="button"
+        // that have aria-expanded (the accordion trigger pattern).
         // Other elements with aria-expanded (e.g. combobox triggers)
         // have different structural requirements.
-        if (tagName.toLowerCase() !== 'button') return;
+        const isButton =
+          tagName.toLowerCase() === 'button' ||
+          getAttributeValue(node, 'role') === 'button';
+
+        if (!isButton) return;
         if (!hasAttribute(node, 'aria-expanded')) return;
 
         const hasHeadingAncestor = hasMatchingAncestor(node, (ancestor) => {

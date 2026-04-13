@@ -23,7 +23,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that dialogs have an accessible name via aria-labelledby or aria-label.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/dialog-requires-title.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#dialog-requires-title',
     },
     messages: {
       missingDialogTitle:

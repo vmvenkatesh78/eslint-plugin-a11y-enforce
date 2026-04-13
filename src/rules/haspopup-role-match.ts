@@ -25,7 +25,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that aria-haspopup has a valid ARIA value.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/haspopup-role-match.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#haspopup-role-match',
     },
     messages: {
       invalidHaspopup:

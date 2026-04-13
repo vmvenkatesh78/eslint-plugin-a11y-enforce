@@ -50,7 +50,7 @@ const recommendedRules: Record<string, string> = Object.fromEntries(
 const plugin = {
   meta: {
     name: 'eslint-plugin-a11y-enforce',
-    version: '0.1.0',
+    version: '0.2.0',
   },
   rules,
   configs: {} as Record<string, Record<string, unknown>>,

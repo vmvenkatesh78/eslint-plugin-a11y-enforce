@@ -24,7 +24,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that tabIndex is not greater than 0.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/no-positive-tabindex.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#no-positive-tabindex',
     },
     messages: {
       positiveTabindex:

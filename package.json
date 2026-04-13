@@ -8,6 +8,8 @@
     "type": "git",
     "url": "https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce"
   },
+  "homepage": "https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce#readme",
+  "bugs": "https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/issues",
   "keywords": [
     "eslint",
     "eslintplugin",
@@ -33,6 +35,7 @@
   "files": [
     "dist",
     "README.md",
+    "CHANGELOG.md",
     "LICENSE"
   ],
   "scripts": {

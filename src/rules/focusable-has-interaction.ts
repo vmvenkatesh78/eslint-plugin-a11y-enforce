@@ -36,7 +36,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that elements with tabIndex={0} have keyboard event handlers.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/focusable-has-interaction.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#focusable-has-interaction',
     },
     messages: {
       missingKeyboardHandler:
@@ -57,11 +57,11 @@ const rule: Rule.RuleModule = {
         // Only check tabIndex={0}. Negative values are programmatic-only.
         if (tabIndex !== 0) return;
 
-        // Native interactive elements (button, input, etc.) already have
-        // built-in keyboard behavior. Adding tabIndex={0} to them is
+        // Native interactive elements (button, input, a with href) already
+        // have built-in keyboard behavior. Adding tabIndex={0} to them is
         // redundant but not a violation.
         const tagName = getElementType(node);
-        if (isInteractiveElement(tagName)) return;
+        if (isInteractiveElement(tagName, node)) return;
 
         if (!hasAnyEventHandler(node, KEYBOARD_HANDLERS)) {
           context.report({ node: astNode, messageId: 'missingKeyboardHandler' });

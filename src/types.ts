@@ -47,5 +47,24 @@ export interface JSXElement {
   readonly type: 'JSXElement';
   readonly openingElement: JSXOpeningElement;
   readonly children: ReadonlyArray<unknown>;
-  readonly parent: JSXElement | unknown;
+  readonly parent: JSXElement | ASTParentNode | null;
+}
+
+/**
+ * Minimal interface for the ESLint AST parent chain.
+ *
+ * ESLint sets a `parent` property on every node during traversal.
+ * The parent chain extends beyond JSX nodes into the full ESTree
+ * (ExpressionStatement, Program, etc.). We type only the fields
+ * we inspect during ancestor walking: `type`, `openingElement`
+ * (present on JSXElement nodes), and `parent` (the next ancestor).
+ *
+ * This replaces the previous `Record<string, unknown>` cast,
+ * which was correct but fragile — a parser change that restructured
+ * the parent chain would silently break without a type error.
+ */
+export interface ASTParentNode {
+  readonly type: string;
+  readonly openingElement?: JSXOpeningElement;
+  readonly parent?: ASTParentNode | null;
 }

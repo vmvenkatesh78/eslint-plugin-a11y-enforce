@@ -16,8 +16,18 @@
  * visitor cannot do. False positives from an overly strict rule cause
  * developers to disable it entirely.
  *
- * Hidden inputs (type="hidden") are excluded because they have no
- * visual or accessible representation.
+ * Excluded input types:
+ * - type="hidden": no visual or accessible representation.
+ * - type="submit": browser provides default accessible name ("Submit").
+ * - type="reset": browser provides default accessible name ("Reset").
+ *
+ * Special input types:
+ * - type="button": accessible name comes from `value` attribute.
+ * - type="image": accessible name comes from `alt` attribute.
+ *
+ * These types derive their name differently than text inputs and
+ * must not trigger false positives when labeled correctly via
+ * their native mechanism.
  */
 
 import type { Rule } from 'eslint';
@@ -34,7 +44,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that form inputs have an accessible label.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/input-requires-label.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#input-requires-label',
     },
     messages: {
       missingLabel:
@@ -55,14 +65,21 @@ const rule: Rule.RuleModule = {
 
         if (!isFormInput(tagName)) return;
 
-        // Hidden inputs have no visual or accessible representation
         const inputType = getAttributeValue(node, 'type');
-        if (inputType === 'hidden') return;
 
+        // These types have browser-provided default accessible names
+        // and do not require explicit labeling.
+        if (inputType === 'hidden' || inputType === 'submit' || inputType === 'reset') return;
+
+        // type="button" gets its name from the value attribute.
+        // type="image" gets its name from the alt attribute.
+        // Both also accept aria-label, aria-labelledby, and id.
         const hasAccessibleLabel =
           hasAttribute(node, 'aria-label') ||
           hasAttribute(node, 'aria-labelledby') ||
-          hasAttribute(node, 'id');
+          hasAttribute(node, 'id') ||
+          (inputType === 'button' && hasAttribute(node, 'value')) ||
+          (inputType === 'image' && hasAttribute(node, 'alt'));
 
         if (!hasAccessibleLabel) {
           context.report({

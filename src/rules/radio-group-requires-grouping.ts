@@ -30,7 +30,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that radio buttons are inside a fieldset or role="radiogroup".',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/radio-group-requires-grouping.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#radio-group-requires-grouping',
     },
     messages: {
       missingGrouping:

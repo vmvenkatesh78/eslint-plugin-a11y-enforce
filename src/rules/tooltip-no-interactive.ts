@@ -31,7 +31,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that tooltip content does not contain interactive elements.',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/tooltip-no-interactive.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#tooltip-no-interactive',
     },
     messages: {
       interactiveInTooltip:
@@ -66,8 +66,8 @@ const rule: Rule.RuleModule = {
 
         const tagName = getElementType(node);
 
-        // Native interactive elements: button, a, input, select, textarea
-        if (isInteractiveElement(tagName)) {
+        // Native interactive elements: button, a (with href), input, select, textarea
+        if (isInteractiveElement(tagName, node)) {
           context.report({ node: astNode, messageId: 'interactiveInTooltip' });
           return;
         }

@@ -20,7 +20,7 @@ const rule: Rule.RuleModule = {
     type: 'problem',
     docs: {
       description: 'Enforce that elements with role="dialog" have aria-modal="true".',
-      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/docs/rules/dialog-requires-modal.md',
+      url: 'https://github.com/vmvenkatesh78/eslint-plugin-a11y-enforce/blob/main/README.md#dialog-requires-modal',
     },
     messages: {
       missingAriaModal:
