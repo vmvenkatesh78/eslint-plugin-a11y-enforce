@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-a11y-enforce",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "ESLint plugin that catches accessibility composition errors that element-level tools miss.",
   "author": "Venkatesh Mukundan <vmvenkatesh78@gmail.com>",
   "license": "MIT",
