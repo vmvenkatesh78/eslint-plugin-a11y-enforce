@@ -27,6 +27,11 @@ export interface JSXAttribute {
         readonly expression: {
           readonly type: string;
           readonly value?: string | number | boolean | null;
+          readonly operator?: string;
+          readonly argument?: {
+            readonly type: string;
+            readonly value?: number;
+          };
         };
       }
     | null;

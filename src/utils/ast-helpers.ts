@@ -81,10 +81,20 @@ export function getAttributeValue(
 
   if (
     attr.value.type === 'JSXExpressionContainer' &&
-    attr.value.expression.type === 'Literal' &&
-    typeof attr.value.expression.value === 'string'
+    attr.value.expression.type === 'Literal'
   ) {
-    return attr.value.expression.value;
+    // String expression: aria-haspopup={"menu"}
+    if (typeof attr.value.expression.value === 'string') {
+      return attr.value.expression.value;
+    }
+    // Boolean expression: aria-modal={true}
+    // JSX boolean expressions produce Literal with boolean value.
+    // Coerce to string so callers can compare against "true"/"false"
+    // consistently regardless of whether the author wrote
+    // aria-modal="true" or aria-modal={true}.
+    if (typeof attr.value.expression.value === 'boolean') {
+      return String(attr.value.expression.value);
+    }
   }
 
   return undefined;
@@ -102,7 +112,7 @@ export function getNumericValue(
   attrName: string,
 ): number | undefined {
   const attr = findAttribute(node, attrName);
-  if (!attr || attr.value === null) return undefined;
+  if (!attr?.value) return undefined;
 
   if (
     attr.value.type === 'JSXExpressionContainer' &&
@@ -112,8 +122,19 @@ export function getNumericValue(
     return attr.value.expression.value;
   }
 
+  // UnaryExpression: tabIndex={-1} parses as { operator: '-', argument: Literal(1) }
+  if (
+    attr.value.type === 'JSXExpressionContainer' &&
+    attr.value.expression.type === 'UnaryExpression' &&
+    attr.value.expression.operator === '-' &&
+    attr.value.expression.argument?.type === 'Literal' &&
+    typeof attr.value.expression.argument.value === 'number'
+  ) {
+    return -attr.value.expression.argument.value;
+  }
+
   if (attr.value.type === 'Literal' && typeof attr.value.value === 'string') {
-    const parsed = parseInt(attr.value.value, 10);
+    const parsed = Number.parseInt(attr.value.value, 10);
     if (!Number.isNaN(parsed)) return parsed;
   }
 
