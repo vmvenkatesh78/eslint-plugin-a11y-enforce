@@ -1,5 +1,9 @@
 # eslint-plugin-a11y-enforce
 
+[![npm](https://img.shields.io/npm/v/eslint-plugin-a11y-enforce)](https://www.npmjs.com/package/eslint-plugin-a11y-enforce)
+[![Socket Badge](https://socket.dev/api/badge/npm/package/eslint-plugin-a11y-enforce)](https://socket.dev/npm/package/eslint-plugin-a11y-enforce)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
 ESLint plugin that catches accessibility composition errors that element-level tools miss.
 
 `eslint-plugin-jsx-a11y` checks individual elements: "does this img have alt text?" `a11y-enforce` checks how elements relate to each other: "does this trigger's `aria-haspopup` match its content's role?" "Is this accordion trigger inside a heading?"
@@ -94,7 +98,7 @@ Elements with `role="dialog"` or `role="alertdialog"` must have `aria-modal="tru
 
 #### `accordion-trigger-heading`
 
-A `<button>` with `aria-expanded` (accordion trigger) should be inside a heading element (`h1`-`h6` or `role="heading"`). Screen reader users navigate pages by headings. Without a heading wrapper, accordion sections are invisible to heading navigation.
+A `<button>` or element with `role="button"` that has `aria-expanded` (accordion trigger) should be inside a heading element (`h1`-`h6` or `role="heading"`). Screen reader users navigate pages by headings. Without a heading wrapper, accordion sections are invisible to heading navigation.
 
 ```jsx
 // Bad: invisible to heading navigation
@@ -191,9 +195,9 @@ Elements with `tabIndex={0}` must have a keyboard event handler (`onKeyDown`, `o
 
 ## Why these rules exist
 
-Accessibility lawsuits in the US increased 37% in 2025, with over 5,000 federal cases filed. The European Accessibility Act started enforcement in June 2025. India's Supreme Court declared digital access a fundamental right, and SEBI mandated accessibility compliance for the financial sector with deadlines through 2026.
+Over 5,000 ADA digital accessibility lawsuits were filed in 2025 across federal and state courts, up from roughly 4,000 in 2024 ([UsableNet 2025 Year-End Report](https://info.usablenet.com/2025-year-end-report-on-web-accessibility-lawsuits)). The European Accessibility Act started enforcement on June 28, 2025. India's Supreme Court declared digital access a fundamental right under Article 21 in April 2025, and SEBI mandated WCAG compliance for the financial sector in July 2025.
 
-The most common issues cited in audits and lawsuits are WCAG 4.1.2 (Name, Role, Value) and 1.3.1 (Info and Relationships). These are exactly the composition errors this plugin catches: mismatched ARIA relationships, missing modal semantics, unlabeled dialogs, and broken focus patterns.
+The composition errors this plugin catches — mismatched ARIA relationships, missing modal semantics, unlabeled dialogs, broken focus patterns — are among the most common findings in accessibility audits.
 
 Your linter should catch these before they ship. `jsx-a11y` catches the element-level issues. `a11y-enforce` catches the composition-level issues.
 
@@ -208,7 +212,7 @@ Your linter should catch these before they ship. `jsx-a11y` catches the element-
 ## Stats
 
 - 10 rules (6 component pattern, 4 general interaction)
-- 149 tests
+- 207 tests
 - Zero runtime dependencies
 - ESM + CJS dual output
 - TypeScript source with full type safety
